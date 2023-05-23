@@ -16,6 +16,6 @@ x=x0+r0*cos(th);
 y=y0+r0*sin(th);
 plot(x,y,p.Results.var);
 if(p.Results.flag)
-    fill(x,y,p.Results.fillvar);
+    fill(x,y,p.Results.fillvar,'LineStyle','none');
 end
 end

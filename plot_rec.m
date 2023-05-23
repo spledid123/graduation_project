@@ -15,6 +15,6 @@ x3 = c + [-s(1) -s(2)] * [cos(th) sin(th);-sin(th) cos(th)];
 x4 = c + [s(1) -s(2)] * [cos(th) sin(th);-sin(th) cos(th)];
 plot([x1(1) x2(1) x3(1) x4(1) x1(1)], [x1(2) x2(2) x3(2) x4(2) x1(2)],p.Results.var);
 if(p.Results.flag)
-    fill([x1(1) x2(1) x3(1) x4(1) x1(1)], [x1(2) x2(2) x3(2) x4(2) x1(2)],p.Results.fillvar);
+    fill([x1(1) x2(1) x3(1) x4(1) x1(1)], [x1(2) x2(2) x3(2) x4(2) x1(2)],p.Results.fillvar,'LineStyle','none');
 end
 end
