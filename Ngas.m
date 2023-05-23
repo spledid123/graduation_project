@@ -1,4 +1,4 @@
-function [x, gx, V, T_newad, xcoll,tcoll] = Ngas(R, x0, gx0, V0, T, T_ad, Tem)
+function [x, gx, V, T_newad, xcoll,tcoll, sd] = Ngas(R, x0, gx0, V0, T, T_ad, Tem)
 %   给定一定的时间间隔，粒子的原位置，速度,输出粒子的末位置，速度
 %   考虑吸附
 %   输入：R为几何参数,x0为原位置，gx0，V0为原速度,T为时间间隔,T_ad为剩余吸附时间,Tem为温度
@@ -67,4 +67,5 @@ end
 if(i == LOOP_MAX)
     sprintf('LOOP_MAX\n');
 end
+sd = scene(x, R);
 end
