@@ -733,63 +733,63 @@ function sd = scene(x,R)
 % end
 %%  正方形阵列
 %  R = [r,Rp,nump],r为bulk圆半径,圆心在原点,Rp为阵列的(正方形边长+间距)/边长比,nump为正方形阵列每行个数，正方形的半边长为1
-if(length(R) ~= 3)
-    error('孔隙参数设置错误');
-end
-s = [1 1];
-r = R(1);
-Rp = R(2);
-nump = R(3);
-sq2 = 2^0.5;
-t = nump * Rp;
-if(t * sq2 > r)
-    error('bulk圆比圆阵列还小');
-end
-tsd = (x(1)^2 + x(2)^2)^0.5;
-if(tsd > r + 0.1)
-    sd = nan;
-elseif(tsd > t * sq2)
-    sd = tsd - t * sq2 + Rp - 1;
-else
-    x = x + t;
-    kx = floor((x(1)/Rp-1)/2);
-    ky = floor((x(2)/Rp-1)/2);
-    if(kx < 0)
-        kx = -1;
-    elseif(kx > (nump - 2))
-        kx = nump - 1;
-    end
-    if(ky < 0)
-        ky = -1;
-    elseif(ky > (nump - 2))
-        ky = nump - 1;
-    end
-    rxmin = Rp * (2 * kx + 1);
-    rxmax = Rp * (2 * kx + 3);
-    rymin = Rp * (2 * ky + 1);
-    rymax = Rp * (2 * ky + 3);
-
-    a=[];
-    a(1) = boxSDF(x,[rxmin,rymin],s,0);
-    a(2) = boxSDF(x,[rxmax,rymin],s,0);
-    a(3) = boxSDF(x,[rxmin,rymax],s,0);
-    a(4) = boxSDF(x,[rxmax,rymax],s,0);
-    if(kx < 0)% rxmin的圆不能要了（不存在）
-        a(1) = t;
-        a(3) = t;
-    elseif(kx > (nump - 2))% rxmax的圆不能要了（不存在）
-        a(2) = t;
-        a(4) = t;
-    end
-    if(ky < 0)% rymin的圆不能要了（不存在）
-        a(1) = t;
-        a(2) = t;
-    elseif(ky > (nump - 2))% rymax的圆不能要了（不存在）
-        a(3) = t;
-        a(4) = t;
-    end
-    sd = min(a);
-end
+% if(length(R) ~= 3)
+%     error('孔隙参数设置错误');
+% end
+% s = [1 1];
+% r = R(1);
+% Rp = R(2);
+% nump = R(3);
+% sq2 = 2^0.5;
+% t = nump * Rp;
+% if(t * sq2 > r)
+%     error('bulk圆比圆阵列还小');
+% end
+% tsd = (x(1)^2 + x(2)^2)^0.5;
+% if(tsd > r + 0.1)
+%     sd = nan;
+% elseif(tsd > t * sq2)
+%     sd = tsd - t * sq2 + Rp - 1;
+% else
+%     x = x + t;
+%     kx = floor((x(1)/Rp-1)/2);
+%     ky = floor((x(2)/Rp-1)/2);
+%     if(kx < 0)
+%         kx = -1;
+%     elseif(kx > (nump - 2))
+%         kx = nump - 1;
+%     end
+%     if(ky < 0)
+%         ky = -1;
+%     elseif(ky > (nump - 2))
+%         ky = nump - 1;
+%     end
+%     rxmin = Rp * (2 * kx + 1);
+%     rxmax = Rp * (2 * kx + 3);
+%     rymin = Rp * (2 * ky + 1);
+%     rymax = Rp * (2 * ky + 3);
+% 
+%     a=[];
+%     a(1) = boxSDF(x,[rxmin,rymin],s,0);
+%     a(2) = boxSDF(x,[rxmax,rymin],s,0);
+%     a(3) = boxSDF(x,[rxmin,rymax],s,0);
+%     a(4) = boxSDF(x,[rxmax,rymax],s,0);
+%     if(kx < 0)% rxmin的圆不能要了（不存在）
+%         a(1) = t;
+%         a(3) = t;
+%     elseif(kx > (nump - 2))% rxmax的圆不能要了（不存在）
+%         a(2) = t;
+%         a(4) = t;
+%     end
+%     if(ky < 0)% rymin的圆不能要了（不存在）
+%         a(1) = t;
+%         a(2) = t;
+%     elseif(ky > (nump - 2))% rymax的圆不能要了（不存在）
+%         a(3) = t;
+%         a(4) = t;
+%     end
+%     sd = min(a);
+% end
 %%  三凹弧
 % if(length(R) ~= 1)
 %     error('孔隙参数设置错误');
@@ -816,6 +816,26 @@ end
 %         arcSDF(x, [200/2*3^0.5, 200/2], 2*pi/3+pi/2+30/180*pi, 2*pi/3+pi/2-30/180*pi, 150, 155) ...
 %         arcSDF(x, [-200/2*3^0.5, 200/2], -2*pi/3+pi/2+30/180*pi, -2*pi/3+pi/2-30/180*pi, 150, 155)]);
 % end
+%%  随机矩形多孔介质
+cir = load('cube.mat');
+cir = cir.cube_1;
+if(length(R) ~= 1)
+    error('孔隙参数设置错误');
+end
+r = R(1);
+len = size(cir);len = len(1);
+s = zeros(1,len);
+tsd = (x(1)^2 + x(2)^2)^0.5;
+if(tsd > r + 0.1)
+    sd = nan;
+elseif(tsd > 220*2^0.5)
+    sd = tsd - 220*2^0.5 + 0.1;
+else
+    for i = 1:len
+        s(i) = boxSDF(x, [cir(i,1), cir(i,2)], [cir(i,3), cir(i,4)], cir(i,5));
+    end
+    sd = min(s);
+end
 
 
 
