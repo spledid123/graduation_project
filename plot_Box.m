@@ -1,11 +1,20 @@
+%   配套analyse_particals.m中关于开放空间内多孔介质内外粒子数+数密度的分析
+%   将以下语句分别贴到命令行窗口，把数密度信息存入matlab.mat
+%   画箱型图
+
 Y=[];YY=[];NY=[];NYY=[];GY=[];GYY=[];GNY=[];GNYY=[];
 
-a=gca;a=a.Children;
-y=a(1).YData(3:37);yy=a(2).YData(3:37);
-a=gca;a=a.Children;
-ny=a(1).YData(3:37);nyy=a(2).YData(3:37);
+%   达到稳定的范围
+rr = 3:37;
+%   粒子数
+a = gca; a = a.Children;
+y = a(1).YData(rr);yy = a(2).YData(rr);
+%   数密度
+a = gca;a = a.Children;
+ny = a(1).YData(rr);nyy = a(2).YData(rr);
 
-y=y';yy=yy';ny=ny';nyy=nyy';
+load('matlab.mat');
+y = y';yy = yy';ny = ny';nyy = nyy';
 str = '正方形阵列(R=1.5)';
 str2 = [str '内'];
 str1 = [str '外'];
@@ -26,6 +35,7 @@ YY = [YY;yy];
 NYY = [NYY;nyy];
 NY = [NY;ny];
 
+%   画箱型图
 figure;
 ax1 = gca;
 boxplot(ax1, Y, GY);
@@ -42,15 +52,3 @@ figure;
 ax4 = gca;
 boxplot(ax4, NYY, GNYY);
 title('内数密度');
-
-
-% boxplot(ax, y);
-% hold on;
-% group = repmat(str1, size(ny,1), 1); 
-% boxplot(ax1, ny);
-% hold on;
-% str2 = [str '内'];
-% group = repmat(str2, size(yy,1), 1); 
-% boxplot(ax, y);
-% group = repmat(str2, size(nyy,1), 1); 
-% boxplot(ax1, ny);

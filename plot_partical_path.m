@@ -1,38 +1,49 @@
 %   画出单个粒子的某段轨迹以及周围的多孔介质
 %%  画出圆阵列
 clear;
-%  xy方向的序号范围，需要给定 
+figure;
+axis off;
+axis equal;
+hold on;
+
+r = 1;% 半径
+R = [1.1 1.1];%    xy方向的圆心距/直径
+%  xy方向的序号范围，圆心位置为r*Rx*(2*kx+1),r*Ry*(2*ky+1)
 kx = 0:3;
 ky = -10:1;
-R = [1.1 1.1];%    xy方向的圆心距/直径
+Rx = R(1);%  x/y方向圆心距/直径
+Ry = R(2);
+
 numx = length(kx);
 numy = length(ky);
 for i = 1:numx
-    x0(i) = R(1) * (2 * kx(i) + 1);
+    x0(i) = r * Rx * (2 * kx(i) + 1);
 end
 for i = 1:numy
-    y0(i) = R(2) * (2 * ky(i) + 1);
+    y0(i) = r * Ry * (2 * ky(i) + 1);
 end
-hold on;
 for i = 1:numx
     for j = 1:numy
-        plot_cir(x0(i),y0(j),1,1);
+        plot_cir(x0(i),y0(j),r,1);
     end
 end
-axis off
-axis equal
 
 %%   画孔喉六边形模型
+%   这样画没办法填充，只能借助ps
+figure;
 hold on;
 axis equal;
-r = 1;% 半径
+axis off;
+
+r = 5;% 半径
 a = 0.5;%  喉道长度/直径
-t = (1 + a) * r;%   六边形边长的一半
-l = 1.7320508075688772935274463415059;% 3^0.5
 R = 1.2;%   （喉道宽度+直径)/直径
 %   序号范围
-ky = -4:3;
 kx = -1:1;
+ky = -4:3;
+
+t = (1 + a) * r;%   六边形边长的一半
+l = 1.7320508075688772935274463415059;% 3^0.5
 y = l * t * ky;
 kx1 = 6 * kx;
 kx2 = 6 * kx + 4;
@@ -65,6 +76,9 @@ tr = 2.2;      % 右边圆阵列圆半径+喉道宽度一半
 tl = 2.2;      % 左边圆阵列圆半径+喉道宽度一半
 tsdr = 0;      %  圆阵列所在正方形与区块的间隔
 tsdl = 0;
+if(numl ~= 0 && numr ~= 0 && numr * tr + tsdr ~= numl * tl + tsdl || tr < Rr || tl < Rl)
+    error('参数设置错误');
+end
 %   右边区块
 kx = 0:numr - 1;
 ky = 0:numr - 1;
@@ -93,17 +107,18 @@ for i = 1:numl
         plot_cir(x0(i),y0(j),Rl,1);
     end
 end
-%%  画气体内圆阵列多孔介质模型
-clear;
-%  xy方向的序号范围，需要给定 
+rx = 2 * (tr * numr + tsdr);
+plot([-rx rx rx -rx -rx], [0 0 rx rx 0],'b--','LineWidth',2);
+plot([0 0], [0 rx],'b--','LineWidth',2);
+%%  画开放空间内圆阵列多孔介质模型
 r = 200;    %   大圆半径
+R = [2 2];%    xy方向的圆心距离/直径
 xmax = 30;  %   每行圆个数
 ymax = 30;  %   每列圆个数
 kx = 0 : xmax - 1;
 ky = 0 : ymax - 1;
-R = [2 2];%    xy方向的圆心距离/直径
-rx = (xmax + 1) * R(1);
-ry = (ymax + 1) * R(2);
+rx = (xmax) * R(1);
+ry = (ymax) * R(2);
 for i = 1:xmax
     x0(i) = R(1) * (2 * kx(i) + 1) - rx;
 end
@@ -112,16 +127,16 @@ for i = 1:ymax
 end
 figure;
 hold on;
-for i = 1:numx
-    for j = 1:numy
+for i = 1:xmax
+    for j = 1:ymax
         plot_cir(x0(i),y0(j),1,1);
     end
 end
-axis off
-axis equal
+axis off;
+axis equal;
 plot_cir(0,0,r,'var','b--');
-plot([-rx rx rx -rx -rx], [-ry -ry ry ry -ry],'b--');
-%% 气体内随机多孔介质
+plot([-rx rx rx -rx -rx], [-ry -ry ry ry -ry],'b--','LineWidth',2);
+%% 气体内随机圆多孔介质
 clear;
 r = 100;    %   大圆半径
 rx = 25 * 2;    %   多孔介质范围
@@ -144,7 +159,7 @@ end
 axis off
 axis equal
 plot_cir(0,0,r,'var','b--');
-plot([-rx rx rx -rx -rx], [-ry -ry ry ry -ry],'b--');
+plot([-rx rx rx -rx -rx], [-ry -ry ry ry -ry],'b--','LineWidth',2);
 %%  气体内多孔介质模型——三角
 s = [84 * 3^0.5, 1];
 figure;
@@ -185,7 +200,7 @@ plot_rec([100 -100],s,0,1);
 plot_rec([-100 100],s,0,1);
 plot_rec([-100 -100],s,0,1);
 rx = 150;
-plot([-rx -rx rx rx -rx], [rx -rx -rx rx rx],'b--');
+plot([-rx -rx rx rx -rx], [rx -rx -rx rx rx],'b--','LineWidth',2);
 %%  气体内多孔介质模型——正方形阵列
 figure;
 hold on;
@@ -240,7 +255,7 @@ plot([x3(1) x31(1)], [x3(2) x31(2)],'--b');
 X1 = [0 x2(2) + (-x2(1)) * (x2(2) - x1(2)) / (x2(1) - x1(1))];
 X2 = [(x3(2) - x2(2)) * (x2(1) - x1(1)) / (x2(2) - x1(2)) + x2(1) x3(2)];
 X3 = [-X2(1) X2(2)];
-plot([X1(1) X2(1) X3(1) X1(1)], [X1(2) X2(2) X3(2) X1(2)],'--b');
+plot([X1(1) X2(1) X3(1) X1(1)], [X1(2) X2(2) X3(2) X1(2)],'--b','LineWidth',2);
 %%  气体内多孔介质模型——凸形弧
 figure;
 hold on;
