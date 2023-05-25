@@ -1,4 +1,5 @@
-## 文件说明
+这个文件的引用要[Obsidian](https://obsidian.md/)软件才能显示。
+程序参考了[用 C 语言画光（一）：基础 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/30745861)和[Inigo Quilez :: computer graphics, mathematics, shaders, fractals, demoscene and more (iquilezles.org)](https://iquilezles.org/articles/distfunctions2d/)
 
 ### analyse_onepartical_path.m
 * 分析单粒子轨迹，输入单粒子轨迹文件
