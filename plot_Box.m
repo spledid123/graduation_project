@@ -5,7 +5,7 @@
 Y=[];YY=[];NY=[];NYY=[];GY=[];GYY=[];GNY=[];GNYY=[];
 
 %   达到稳定的范围
-rr = 129:166;
+rr = 129-128:166-128;
 %   粒子数
 a = gca; a = a.Children;
 y = a(1).YData(rr);yy = a(2).YData(rr);
