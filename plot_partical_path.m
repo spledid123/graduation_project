@@ -277,6 +277,42 @@ plot_cir(0,0,100,'var','b--');
 plot_arc([0, 0], r(1), r(2), -pi/6+5/180*pi, pi/2-5/180*pi);
 plot_arc([0, 0], r(1), r(2), pi/2+5/180*pi, -5*pi/6-5/180*pi);
 plot_arc([0, 0], r(1), r(2), -5*pi/6+5/180*pi, -pi/6-5/180*pi);
+%%  随机圆阵列
+figure;
+hold on;
+axis equal;
+axis off;
+cir = load('cir.mat');
+cir = cir.cir_4;
+len = size(cir);
+len = len(1) - 1;
+for i = 1:len
+    plot_cir(cir(i,1), cir(i,2), cir(i,3), 1);
+end
+r = 500;
+plot_cir(0, 0, 500, 'var', 'b--');
+rx = 205;
+plot([-rx -rx rx rx -rx], [rx -rx -rx rx rx],'b--','LineWidth',2);
+xlim([-205 205]);
+ylim([-205 205]);
+%%  随机矩形
+figure;
+hold on;
+axis equal;
+axis off;
+cir = load('cube.mat');
+cir = cir.cube_1;
+len = size(cir);
+len = len(1) - 1;
+for i = 1:len
+    plot_rec([cir(i,1), cir(i,2)], [cir(i,3), cir(i,4)], cir(i,5), 1);
+end
+r = 500;
+plot_cir(0, 0, 500, 'var', 'b--');
+rx = 205;
+plot([-rx -rx rx rx -rx], [rx -rx -rx rx rx],'b--','LineWidth',2);
+xlim([-205 205]);
+ylim([-205 205]);
 %%  画单粒子轨迹
 % clc;
 clear;
