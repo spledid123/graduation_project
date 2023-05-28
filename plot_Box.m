@@ -5,7 +5,7 @@
 Y=[];YY=[];NY=[];NYY=[];GY=[];GYY=[];GNY=[];GNYY=[];
 
 %   达到稳定的范围
-rr = 3:37;
+rr = 129:166;
 %   粒子数
 a = gca; a = a.Children;
 y = a(1).YData(rr);yy = a(2).YData(rr);
@@ -15,7 +15,7 @@ ny = a(1).YData(rr);nyy = a(2).YData(rr);
 
 load('matlab.mat');
 y = y';yy = yy';ny = ny';nyy = nyy';
-str = '正方形阵列(R=1.5)';
+str = '随机矩形';
 str2 = [str '内'];
 str1 = [str '外'];
 g = repmat({str1}, length(y), 1); %   外粒子数
@@ -45,10 +45,13 @@ ax2 = gca;
 boxplot(ax2, YY, GYY);
 title('内粒子数');
 figure;
+subplot(1,2,1);
 ax3 = gca;
 boxplot(ax3, NY, GNY);
 title('外数密度');
-figure;
+ylim([0 0.018]);
+subplot(1,2,2);
 ax4 = gca;
 boxplot(ax4, NYY, GNYY);
 title('内数密度');
+ylim([0 0.018]);
