@@ -283,7 +283,7 @@ hold on;
 axis equal;
 axis off;
 cir = load('cir.mat');
-cir = cir.cir_4;
+cir = cir.cir_5;
 len = size(cir);
 len = len(1) - 1;
 for i = 1:len
@@ -292,7 +292,7 @@ end
 r = 500;
 plot_cir(0, 0, 500, 'var', 'b--');
 rx = 205;
-plot([-rx -rx rx rx -rx], [rx -rx -rx rx rx],'b--','LineWidth',2);
+% plot([-rx -rx rx rx -rx], [rx -rx -rx rx rx],'b--','LineWidth',2);
 xlim([-205 205]);
 ylim([-205 205]);
 %%  随机矩形
@@ -310,7 +310,7 @@ end
 r = 500;
 plot_cir(0, 0, 500, 'var', 'b--');
 rx = 205;
-plot([-rx -rx rx rx -rx], [rx -rx -rx rx rx],'b--','LineWidth',2);
+% plot([-rx -rx rx rx -rx], [rx -rx -rx rx rx],'b--','LineWidth',2);
 xlim([-205 205]);
 ylim([-205 205]);
 %%  画单粒子轨迹

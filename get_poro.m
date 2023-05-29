@@ -1,19 +1,22 @@
-function phi = get_poro(a, color)
-%   获取孔隙度phi
-%   提供图窗gca,要求只有固体-孔隙两个颜色
-%   color为填充固体的颜色，三元组
-frame = getframe(a);
-f = frame.cdata;
-su = size(f);
-sumi = su(1);
-sumj = su(2);
-phi = 0;
-for i = 1:sumi
-    for j = 1:sumj
-        if(f(i,j,1) == color(1) && f(i,j,2) == color(2) && f(i,j,3) == color(3))
-            phi = phi + 1;
-        end
-    end
-end
-phi = 1 - phi/(sumi*sumj);
+function [phi,phi_b] = get_poro(gca, gcf)
+%   获取不包含死孔的孔隙度phi,包含死孔孔隙度phi_b
+%   提供图窗gca和gcf,要求只有固体-孔隙两个颜色
+set(gca,'position',[0,0,1,1]);
+set(gcf,'position',[0,0,468,468]);
+axis equal;
+saveas(gca,'data\pic\get_poro_pic.png');
+t = imread('data\pic\get_poro_pic.png');
+ts = rgb2gray(t);
+s = imbinarize(ts);%    二值图像
+figure;
+imshowpair(ts,s,'montage');% 画出二值图像，检查 
+A = numel(s);
+Asolid = A - sum(s,'all');   %   固体面积
+phi_b = 1 - Asolid/numel(s);
+st = imfill(~s,[1 1],4);    %   反转二值图像泛洪填充白色，于是只有死孔是黑色
+% figure;
+% imshow(st);
+Adeadpore = A - sum(st,'all');
+phi = 1 - (Adeadpore + Asolid)/A;
+
 end
