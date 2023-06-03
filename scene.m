@@ -1,8 +1,10 @@
-function sd = scene(x,R)
+function sd = scene(x, R, varargin)
 %   返回点到边界的最短距离
 %   x=[x,y]为坐标
 %   R=[Rx,Ry]为多孔介质形状参数
-
+p = inputParser;            % 函数的输入解析器
+addOptional(p,"pm",0);
+parse(p,varargin{:});
 %%   圆形阵列
 %   圆的半径为r,于是x方向孔的半径为Rx-1;y方向孔的半径为Ry-1;
 %   于是x方向圆心坐标为(Rx)*(2*kx+1);y方向圆心坐标为Ry*(2*ky+1);
@@ -817,27 +819,49 @@ function sd = scene(x,R)
 %         arcSDF(x, [-200/2*3^0.5, 200/2], -2*pi/3+pi/2+30/180*pi, -2*pi/3+pi/2-30/180*pi, 150, 155)]);
 % end
 %%  随机矩形多孔介质
-cir = load('cube.mat');
-cir = cir.cube_1;
+% cir = load('cube.mat');
+% cir = cir.cube_1;
+% if(length(R) ~= 1)
+%     error('孔隙参数设置错误');
+% end
+% r = R(1);
+% len = size(cir);len = len(1);
+% s = zeros(1,len);
+% tsd = (x(1)^2 + x(2)^2)^0.5;
+% if(tsd > r + 0.1)
+%     sd = nan;
+% elseif(tsd > 220*2^0.5)
+%     sd = tsd - 220*2^0.5 + 0.1;
+% else
+%     for i = 1:len
+%         s(i) = boxSDF(x, [cir(i,1), cir(i,2)], [cir(i,3), cir(i,4)], cir(i,5));
+%     end
+%     sd = min(s);
+% end
+%%  引用scene_pix
+pm = p.Results.pm;
+if(isequal(pm,0))
+    error('pm没给');
+end
 if(length(R) ~= 1)
     error('孔隙参数设置错误');
 end
 r = R(1);
-len = size(cir);len = len(1);
-s = zeros(1,len);
+t = 205;
+sq2 = 2^0.5;
+if(t * sq2 > r)
+    error('bulk圆比圆阵列还小');
+end
+ppm = pm{1};
 tsd = (x(1)^2 + x(2)^2)^0.5;
+tssd = boxSDF(x, [0 0], [t t], 0);
 if(tsd > r + 0.1)
     sd = nan;
-elseif(tsd > 220*2^0.5)
-    sd = tsd - 220*2^0.5 + 0.1;
+elseif(tssd > 0)
+    sd = tssd + 1;
 else
-    for i = 1:len
-        s(i) = boxSDF(x, [cir(i,1), cir(i,2)], [cir(i,3), cir(i,4)], cir(i,5));
-    end
-    sd = min(s);
+    sd = scene_psi(x(1), x(2), ppm.sdf, [-t t], [-t t], ppm.maxx, ppm.maxy);
 end
-
-
 
 
 

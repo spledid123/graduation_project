@@ -1,17 +1,17 @@
 %   主函数，描述N个粒子的运动，赋予速度，固定时间间隔记录粒子位置，速度
 %   并行计算
 %   考虑周期性边界
-clc;
-clear;
+% clc;
+% clear;
 
 EPSILON = 1e-6;
 EPSILON_SD = 1e-7;
 
-R = [500 1.5 100];     %   几何参数
+R = [500];     %   几何参数
 % 九宫格多孔介质参数R=[右边的圆半径 右边的圆半径+喉道宽度一半 右边的一排/列圆数量 左边的圆半径 左边的圆半径+喉道宽度一半 左边的一排/列圆数量]
 %  R = [r,Rp,nump],r为bulk圆半径,圆心在原点,Rp为阵列的孔喉比,nump为圆阵列每行个数，圆的半径为1
 
-N = 50000;            %   粒子个数
+N = 100000;            %   粒子个数
 N_T = 1e-1;         %   时间间隔
 
 Tem = 40;           %   绝对温度
@@ -35,8 +35,14 @@ dc_x = cell(N,1);   %   碰撞的位置
 dc_y = cell(N,1);   
 dc_t = zeros(N,1);  %   碰撞的次数
 
-filenamesta = 'data\';
+ppm = 0;
+if(exist('pm','var'))
+    ppm = pm;
+end
+
+filenamesta = 'data\bulk_pore_pm1_R_500_N_100000_dT_1_200\rxT_circle_T_';
 filenameend = '_.txt';
+tic;
 %  直接初始化
 % for i = 1:N
 %     %   角度均匀发射
@@ -50,14 +56,14 @@ filenameend = '_.txt';
 %     d_T(i) = T_ad;
 % end
 %   初始化，已经跑了一段时间，直接读取文件
-% T = 300;    %   起始时刻
-% filenamemid = num2str(T);
-% filename = strcat(filenamesta,filenamemid,filenameend);
-% A = readtable(filename);
-% d_x = table2array(A(:,1:2));
-% d_gx = table2array(A(:,3:4));
-% d_v = table2array(A(:,5));
-% d_T = table2array(A(:,6));
+T = 0.9;    %   起始时刻
+filenamemid = num2str(T);
+filename = strcat(filenamesta,filenamemid,filenameend);
+A = readtable(filename);
+d_x = table2array(A(:,1:2));
+d_gx = table2array(A(:,3:4));
+d_v = table2array(A(:,5));
+d_T = table2array(A(:,6));
 %   初始化，针对圆bulk内部有多孔介质的体系,向园内射入粒子，方向满足余弦，速度满足2D泄流
 % r = R(1);
 % for i = 1:N
@@ -66,16 +72,34 @@ filenameend = '_.txt';
 %     theta_v = theta + (asin(2*rand()-1));
 %     gx0 = [cos(theta_v) sin(theta_v)];
 %     V0 = Boltzmann(Tem);
-%     T_ad = (i-1+250) * (1/200);   %  轮流发射
+%     T_ad = (i-1) * (1/2000);   %  轮流发射
 %     d_x(i,:) = [-r * cos(theta) -r * sin(theta)];
 % %     d_x(i,:) = x0;
 %     d_v(i) = V0;
 %     d_gx(i,:) = gx0;
 %     d_T(i) = T_ad;
-%     d_sd(i) = scene(d_x(i,:),R);
+%     d_sd(i) = scene(d_x(i,:),R); 
+% end
+%   用像素计算sdf
+% r = R(1);
+% parfor i = 1:N
+%     %   角度均匀发射
+%     theta = 2*pi*rand();
+%     theta_v = theta + (asin(2*rand()-1));
+%     gx0 = [cos(theta_v) sin(theta_v)];
+%     V0 = Boltzmann(Tem);
+%     T_ad = (i-1) * (1/200);   %  轮流发射
+%     d_x(i,:) = [-r * cos(theta) -r * sin(theta)];
+% %     d_x(i,:) = x0;
+%     d_v(i) = V0;
+%     d_gx(i,:) = gx0;
+%     d_T(i) = T_ad;
+%     d_sd(i) = scene(d_x(i,:),R,ppm); %   可以调整一下计算方式
 % end
 
-sumj = 5500 - 3000;
+toc;
+tic;
+sumj = 5500;
 for j = 1:sumj %    时间循环
     parfor i = 1:N
         x = d_x(i,:);
@@ -84,7 +108,7 @@ for j = 1:sumj %    时间循环
         T_ad = d_T(i);
         sd = d_sd(i);
         if(~isnan(sd))
-            [x, gx, V, T_ad, xcoll, tcoll, sd] = Ngas(R, x, gx, V, N_T, T_ad, Tem);
+            [x, gx, V, T_ad, xcoll, tcoll, sd] = Ngas(R, x, gx, V, N_T, T_ad, Tem, ppm);
         end
 %         %   考虑周期性边界，归一
 %         t = 2 * R(3) * R(2);           %   普通区块
@@ -137,5 +161,6 @@ for j = 1:sumj %    时间循环
     filenamemid = num2str(T);
     filename = strcat(filenamesta,filenamemid,filenameend);
     varNames = {'rx','ry','gx','gy','v','Tad','sd'};
-    writetable(table(d_x(:,1),d_x(:,2),d_gx(:,1),d_gx(:,2),d_v,d_T,d_sd,'VariableNames',varNames),filename,'WriteMode','append');
+    writetable(table(d_x(:,1),d_x(:,2),d_gx(:,1),d_gx(:,2),d_v,d_T,d_sd,'VariableNames',varNames),filename,'WriteMode','overwrite');
 end
+toc;
