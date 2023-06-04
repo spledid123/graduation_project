@@ -12,6 +12,12 @@ sdx = (Xlim(2) - Xlim(1))/sumx;
 i = floor((x-Xlim(1))/sdx) + 1;
 sdy = (Ylim(2) - Ylim(1))/sumy;
 j = floor((y-Ylim(1))/sdy) + 1;
+if(i > sumx)
+    i = i - 1;
+end
+if(j > sumy)
+    j = j - 1;
+end
 tx = (Xlim(2) - Xlim(1))/sumx;
 ty = (Ylim(2) - Ylim(1))/sumy;
 if(abs(tx - ty) > 1e-4)

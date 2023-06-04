@@ -3,7 +3,7 @@ function sd = scene(x, R, varargin)
 %   x=[x,y]为坐标
 %   R=[Rx,Ry]为多孔介质形状参数
 p = inputParser;            % 函数的输入解析器
-addOptional(p,"pm",0);
+addOptional(p,'pm',0);
 parse(p,varargin{:});
 %%   圆形阵列
 %   圆的半径为r,于是x方向孔的半径为Rx-1;y方向孔的半径为Ry-1;
@@ -839,8 +839,8 @@ parse(p,varargin{:});
 %     sd = min(s);
 % end
 %%  引用scene_pix
-pm = p.Results.pm;
-if(isequal(pm,0))
+ppm = p.Results.pm;ppm = ppm{1};
+if(isequal(ppm,0))
     error('pm没给');
 end
 if(length(R) ~= 1)
@@ -852,7 +852,6 @@ sq2 = 2^0.5;
 if(t * sq2 > r)
     error('bulk圆比圆阵列还小');
 end
-ppm = pm{1};
 tsd = (x(1)^2 + x(2)^2)^0.5;
 tssd = boxSDF(x, [0 0], [t t], 0);
 if(tsd > r + 0.1)

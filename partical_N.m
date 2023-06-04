@@ -1,8 +1,8 @@
 %   主函数，描述N个粒子的运动，赋予速度，固定时间间隔记录粒子位置，速度
 %   并行计算
 %   考虑周期性边界
-% clc;
-% clear;
+clc;
+clear;
 
 EPSILON = 1e-6;
 EPSILON_SD = 1e-7;
@@ -11,8 +11,8 @@ R = [500];     %   几何参数
 % 九宫格多孔介质参数R=[右边的圆半径 右边的圆半径+喉道宽度一半 右边的一排/列圆数量 左边的圆半径 左边的圆半径+喉道宽度一半 左边的一排/列圆数量]
 %  R = [r,Rp,nump],r为bulk圆半径,圆心在原点,Rp为阵列的孔喉比,nump为圆阵列每行个数，圆的半径为1
 
-N = 100000;            %   粒子个数
-N_T = 1e-1;         %   时间间隔
+N = 1000000;            %   粒子个数
+N_T = 1e0;         %   时间间隔
 
 Tem = 40;           %   绝对温度
 theta = 0;          %   速度方向角度
@@ -35,12 +35,14 @@ dc_x = cell(N,1);   %   碰撞的位置
 dc_y = cell(N,1);   
 dc_t = zeros(N,1);  %   碰撞的次数
 
+load('data\pm.mat');
 ppm = 0;
 if(exist('pm','var'))
-    ppm = pm;
+    ppm = pm(1);ppm{1}.bina = [];
 end
+clearvars pm;
 
-filenamesta = 'data\bulk_pore_pm1_R_500_N_100000_dT_1_200\rxT_circle_T_';
+filenamesta = 'data\bulk_pore_pm1_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
 filenameend = '_.txt';
 tic;
 %  直接初始化
@@ -56,7 +58,7 @@ tic;
 %     d_T(i) = T_ad;
 % end
 %   初始化，已经跑了一段时间，直接读取文件
-T = 0.9;    %   起始时刻
+T = 10;    %   起始时刻
 filenamemid = num2str(T);
 filename = strcat(filenamesta,filenamemid,filenameend);
 A = readtable(filename);
@@ -88,7 +90,7 @@ d_T = table2array(A(:,6));
 %     theta_v = theta + (asin(2*rand()-1));
 %     gx0 = [cos(theta_v) sin(theta_v)];
 %     V0 = Boltzmann(Tem);
-%     T_ad = (i-1) * (1/200);   %  轮流发射
+%     T_ad = (i-1) * (1/2000);   %  轮流发射
 %     d_x(i,:) = [-r * cos(theta) -r * sin(theta)];
 % %     d_x(i,:) = x0;
 %     d_v(i) = V0;
@@ -99,7 +101,7 @@ d_T = table2array(A(:,6));
 
 toc;
 tic;
-sumj = 5500;
+sumj = 550;
 for j = 1:sumj %    时间循环
     parfor i = 1:N
         x = d_x(i,:);

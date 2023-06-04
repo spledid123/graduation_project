@@ -77,7 +77,7 @@ num_cir = zeros(5500,1);%   圆内粒子数
 num_pore = zeros(5500,1);%  多孔介质内粒子数
 flag = 0;    %   1表征这是存在多孔介质，0表示没有
 % 循环遍历每个表格
-ii = 129:1:166;
+ii = 1:1:120;
 N_T = 1;
 j = 1;
 V = [];
@@ -85,7 +85,7 @@ TH = [];
 tic;
 for i = ii
     % 从表格中提取粒子的x和y坐标,可能有两个文件
-    filenamesta = 'data\bulk_pore_randrec_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
+    filenamesta = 'data\bulk_pore_pm1_R_500_N_100000_dT_1_200\rxT_circle_T_';
     %     filenamesta1 = 'data\bulk_pore_cir_R_500_1.1_100_N_1000000_dT_1_2000(2)\rxT_circle_T_';
     filenamemid = num2str(N_T*i);
     filenameend = '_.txt';
@@ -103,12 +103,12 @@ for i = ii
     th = atan2(A.gy,A.gx);
 
     %   根据圆-多孔介质模型的特点进行计数筛选
-%         t_pore = (x.^2 + y.^2).^0.5 < 100;    %   半径100的圆弧
+        t_pore = (x.^2 + y.^2).^0.5 < 200;    %   半径100的圆弧
 %         t_pore = (x < Rp * nump) & (x > -Rp * nump) & (y > - Rp * nump) & (y < Rp * nump);    %   阵列
 %         t_pore = (x < 180) & (x > -180) & (y > - 180) & (y < 180);  % 四个正方形或者阵列或者四个圆
     %   t_pore = (x < 150) & (x > -150) & (y > - 150) & (y < 150);
 %       t_pore = (x < 110) & (x > -110) & (y > - 110) & (y < 110);
-      t_pore = (x < 205) & (x > -205) & (y > - 205) & (y < 205);
+%       t_pore = (x < 205) & (x > -205) & (y > - 205) & (y < 205);
     %   三角
     %     t_pore = [];
     %     for k = 1:length(v)
@@ -190,7 +190,7 @@ toc;
 % Sp = Sf([-100*3^0.5 100], [100*3^0.5 100], [0 -200]) - 1/2*pi*(155)^2;
 % Sp = 360^2 - 4*30^2;
 % Sp = (2 * nump * Rp)^2 - nump*nump*4;%`  正方形阵列
-Sp = (205*2)^2*0.6122;
+Sp = pi * 200^2 - 6*(11/36*pi*200^2 - 200^2*cos(55/180*pi)*sin(55/180*pi));
 
 
 f_p = num_pore / Sp; %  多孔介质数密度
@@ -205,7 +205,8 @@ f_p = num_pore / Sp; %  多孔介质数密度
 %                          - 3*Sf(X1,x1,[-x1(1) x1(2)]));
 %   三凸圆
 % Sc = pi * (r - 1e-3)^2 - Sf([-100*3^0.5 100], [100*3^0.5 100], [0 -200]) + 1/2*pi*(150)^2;
-Sc = pi * (r - 1e-3) ^ 2 - (2 * 205)^2;
+% Sc = pi * (r - 1e-3) ^ 2 - (2 * 205)^2;
+Sc = pi* (r-1e-3)^2 - pi*200^2;
 
 f_c = (num_cir - num_pore) / Sc; %  多孔介质外数密度
 %  画图
