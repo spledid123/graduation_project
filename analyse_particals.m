@@ -77,7 +77,7 @@ num_cir = zeros(5500,1);%   圆内粒子数
 num_pore = zeros(5500,1);%  多孔介质内粒子数
 flag = 0;    %   1表征这是存在多孔介质，0表示没有
 % 循环遍历每个表格
-ii = 1:1:120;
+ii = 10:10:550;
 N_T = 1;
 j = 1;
 V = [];
@@ -85,7 +85,7 @@ TH = [];
 tic;
 for i = ii
     % 从表格中提取粒子的x和y坐标,可能有两个文件
-    filenamesta = 'data\bulk_pore_pm1_R_500_N_100000_dT_1_200\rxT_circle_T_';
+    filenamesta = 'data\bulk_pore_pm2_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
     %     filenamesta1 = 'data\bulk_pore_cir_R_500_1.1_100_N_1000000_dT_1_2000(2)\rxT_circle_T_';
     filenamemid = num2str(N_T*i);
     filenameend = '_.txt';
@@ -190,7 +190,19 @@ toc;
 % Sp = Sf([-100*3^0.5 100], [100*3^0.5 100], [0 -200]) - 1/2*pi*(155)^2;
 % Sp = 360^2 - 4*30^2;
 % Sp = (2 * nump * Rp)^2 - nump*nump*4;%`  正方形阵列
-Sp = pi * 200^2 - 6*(11/36*pi*200^2 - 200^2*cos(55/180*pi)*sin(55/180*pi));
+% Sp = 40011;%pm1
+%   pm2
+% th = 5/180*pi;
+% a = 200 * (sin(th) * 3^0.5 + cos(th));
+% S1 = 3^0.5*(200*sin(th))^2;
+% Shu = th*200^2;
+% Ssan = 200^2*sin(th)*cos(th);
+% S2 = Shu - Ssan;
+% S3 = S1 - S2;
+% S4 = (3*a/2)*(3^0.5*a/2);
+% Sp = S4 - 3*S3;
+Sp = 67059;%与精确值有0.3%的差距
+
 
 
 f_p = num_pore / Sp; %  多孔介质数密度
@@ -356,6 +368,10 @@ b = norm(X3 - X2);
 c = norm(X2 - X3);
 p = (a + b + c) / 2;
 s = (p * (p - a) * (p - b) * (p - c))^0.5;
+end
+function s = Sseg(r, th)
+%   给定半径与角度，计算弓形面积
+s = th/2*r^2 - r^2*sin(th/2)*cos(th/2);
 end
 
 

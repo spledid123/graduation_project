@@ -48,8 +48,8 @@ set(gca,'position',[0,0,1,1]);
 set(gcf,'position',[0,0,800,800]);
 saveas(gcf,'data\pic\cir1.bmp');
 close();
-figure;fill([0 -cos(30/180*pi)*a cos(30/180*pi)*a], [-a sin(30/180)*pi*a sin(30/180)*pi*a],'r','LineStyle','none');
-xlim([-205 205]);ylim([-205 205]);
+figure;fill([0 -cos(30/180*pi)*a cos(30/180*pi)*a], [-a sin(30/180*pi)*a sin(30/180*pi)*a],'r','LineStyle','none');
+hold on;axis equal;axis off;xlim([-205 205]);ylim([-205 205]);
 set(gca,'position',[0,0,1,1]);
 set(gcf,'position',[0,0,800,800]);
 saveas(gcf,'data\pic\tri.bmp');
@@ -57,6 +57,7 @@ close();
 cir1 = imread('data\pic\cir1.bmp');
 tri = imread('data\pic\tri.bmp');
 cir = red_minus(cir1, tri);
+figure;
 imshow(cir);
 
 %%  三角内直边
@@ -96,6 +97,7 @@ cir4 = imread('data\pic\rec3.bmp');
 cir = red_minus(cir1, cir2);
 cir = red_minus(cir, cir3);
 cir = red_minus(cir, cir4);
+figure;
 imshow(cir);
 %%  三角内凸边
 clc;
@@ -134,6 +136,7 @@ cir_1 = red_lap(cir1, cir2);
 cir_2 = red_lap(cir1, cir3);
 cir_3 = red_lap(cir1, cir4);
 cir = red_add(red_add(cir_1, cir_2), cir_3);
+figure;
 imshow(cir);
 %%  三角内凹边
 clc;
@@ -156,6 +159,7 @@ close();
 cir1 = imread('data\pic\tri.bmp');
 cir2 = imread('data\pic\cir1.bmp');
 cir = red_minus(cir1, cir2);
+figure;
 imshow(cir);
 
 %%  得到SDF
@@ -163,7 +167,8 @@ imshow(cir);
 ppm = struct('name', 'tri3', 'exp', '单体为三角形，被凹圆切', 'maxx', xlim, 'maxy', ylim, 'bina', s, 'sdf', sdf);
 load('data\pm.mat');
 pm{length(pm) + 1} = ppm;
-save('data\pm.mat', 'pm');
+%%
+save('data\pm.mat', 'pm','-mat','-v7.3');
 
 
 function cir = red_lap(cir1, cir2)

@@ -5,7 +5,7 @@
 Y=[];YY=[];NY=[];NYY=[];GY=[];GYY=[];GNY=[];GNYY=[];
 
 %   达到稳定的范围
-rr = 129-128:166-128;
+rr = 5:50;
 %   粒子数
 a = gca; a = a.Children;
 y = a(1).YData(rr);yy = a(2).YData(rr);
@@ -15,7 +15,7 @@ ny = a(1).YData(rr);nyy = a(2).YData(rr);
 
 load('matlab.mat');
 y = y';yy = yy';ny = ny';nyy = nyy';
-str = '随机矩形';
+str = 'pm2';
 str2 = [str '内'];
 str1 = [str '外'];
 g = repmat({str1}, length(y), 1); %   外粒子数
