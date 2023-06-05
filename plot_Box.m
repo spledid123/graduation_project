@@ -5,14 +5,15 @@
 Y=[];YY=[];NY=[];NYY=[];GY=[];GYY=[];GNY=[];GNYY=[];
 
 %   达到稳定的范围
+%%
 rr = 5:50;
 %   粒子数
 a = gca; a = a.Children;
 y = a(1).YData(rr);yy = a(2).YData(rr);
-%   数密度
+%%   数密度
 a = gca;a = a.Children;
 ny = a(1).YData(rr);nyy = a(2).YData(rr);
-
+%%
 load('matlab.mat');
 y = y';yy = yy';ny = ny';nyy = nyy';
 str = 'pm2';
@@ -35,7 +36,7 @@ YY = [YY;yy];
 NYY = [NYY;nyy];
 NY = [NY;ny];
 
-%   画箱型图
+%%   画箱型图
 figure;
 ax1 = gca;
 boxplot(ax1, Y, GY);
@@ -44,6 +45,7 @@ figure;
 ax2 = gca;
 boxplot(ax2, YY, GYY);
 title('内粒子数');
+%%
 figure;
 subplot(1,2,1);
 ax3 = gca;
@@ -55,3 +57,5 @@ ax4 = gca;
 boxplot(ax4, NYY, GNYY);
 title('内数密度');
 ylim([0 0.018]);
+%%
+save('matlab.mat','GNYY','NYY',"GNY","NY","GYY","GY","YY","Y");
