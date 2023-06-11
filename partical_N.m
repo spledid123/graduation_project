@@ -38,11 +38,11 @@ dc_t = zeros(N,1);  %   碰撞的次数
 load('data\pm.mat');
 ppm = 0;
 if(exist('pm','var'))
-    ppm = pm(3);ppm{1}.bina = [];
+    ppm = pm(5);ppm{1}.bina = [];
 end
 clearvars pm;
 
-filenamesta = 'data\bulk_pore_pm3_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
+filenamesta = 'data\bulk_pore_pm5_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
 filenameend = '_.txt';
 tic;
 %  直接初始化

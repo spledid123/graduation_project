@@ -85,7 +85,7 @@ TH = [];
 tic;
 for i = ii
     % 从表格中提取粒子的x和y坐标,可能有两个文件
-    filenamesta = 'data\bulk_pore_pm2_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
+    filenamesta = 'data\bulk_pore_pm5_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
     %     filenamesta1 = 'data\bulk_pore_cir_R_500_1.1_100_N_1000000_dT_1_2000(2)\rxT_circle_T_';
     filenamemid = num2str(N_T*i);
     filenameend = '_.txt';
@@ -103,17 +103,17 @@ for i = ii
     th = atan2(A.gy,A.gx);
 
     %   根据圆-多孔介质模型的特点进行计数筛选
-        t_pore = (x.^2 + y.^2).^0.5 < 200;    %   半径100的圆弧
+%         t_pore = (x.^2 + y.^2).^0.5 < 200;    %   半径100的圆弧
 %         t_pore = (x < Rp * nump) & (x > -Rp * nump) & (y > - Rp * nump) & (y < Rp * nump);    %   阵列
 %         t_pore = (x < 180) & (x > -180) & (y > - 180) & (y < 180);  % 四个正方形或者阵列或者四个圆
     %   t_pore = (x < 150) & (x > -150) & (y > - 150) & (y < 150);
 %       t_pore = (x < 110) & (x > -110) & (y > - 110) & (y < 110);
 %       t_pore = (x < 205) & (x > -205) & (y > - 205) & (y < 205);
     %   三角
-    %     t_pore = [];
-    %     for k = 1:length(v)
-    %         t_pore(k) = triangleSDF([x(k) y(k)], [-115*3^0.5,-115], [115*3^0.5,-115], [0, 230]) < 0;
-    %     end
+        t_pore = [];
+        for k = 1:length(v)
+            t_pore(k) = triangleSDF([x(k) y(k)], [-100*3^0.5,-100], [100*3^0.5,-100], [0, 200]) < 0;
+        end
     %   两圆
     %     t_pore = ((x + 150).^2 + (y).^2) < 205^2 | ((x - 150).^2 + (y).^2) < 205^2;   %   l
     %   三凹圆弧
@@ -201,7 +201,13 @@ toc;
 % S3 = S1 - S2;
 % S4 = (3*a/2)*(3^0.5*a/2);
 % Sp = S4 - 3*S3;
-Sp = 67059;%与精确值有0.3%的差距
+% Sp = 67059;%与精确值有0.3%的差距
+%   pm3
+% Sp = 41440;
+%pm4
+% Sp = 42434;
+%pm5
+Sp = 47023.7;
 
 
 
@@ -218,7 +224,8 @@ f_p = num_pore / Sp; %  多孔介质数密度
 %   三凸圆
 % Sc = pi * (r - 1e-3)^2 - Sf([-100*3^0.5 100], [100*3^0.5 100], [0 -200]) + 1/2*pi*(150)^2;
 % Sc = pi * (r - 1e-3) ^ 2 - (2 * 205)^2;
-Sc = pi* (r-1e-3)^2 - pi*200^2;
+% Sc = pi* (r-1e-3)^2 - pi*200^2;
+Sc = pi* (r-1e-3)^2 - 100*3^0.5*300;
 
 f_c = (num_cir - num_pore) / Sc; %  多孔介质外数密度
 %  画图
