@@ -41,7 +41,7 @@ while(T > EPSILON && i < LOOP_MAX)
     elseif(sd - EPSILON_SD < 0)          % 在边界
         tcoll = tcoll + 1;% 记录碰撞点
         xcoll(tcoll,:) = x;
-        n = gradient(x, R, EPSILON_SD * 50, p.Results.pm);
+        n = gradient(x, R, EPSILON_SD, p.Results.pm);
         gx = reflect(gx, n);
         V = Boltzmann(Tem);
         x = x + gx * 2 * EPSILON_SD;

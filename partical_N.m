@@ -38,11 +38,11 @@ dc_t = zeros(N,1);  %   碰撞的次数
 load('data\pm.mat');
 ppm = 0;
 if(exist('pm','var'))
-    ppm = pm(5);ppm{1}.bina = [];
+    ppm = pm(9);ppm{1}.bina = [];
 end
 clearvars pm;
 
-filenamesta = 'data\bulk_pore_pm5_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
+filenamesta = 'data\bulk_pore_pm9_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
 filenameend = '_.txt';
 tic;
 %  直接初始化
@@ -58,14 +58,14 @@ tic;
 %     d_T(i) = T_ad;
 % end
 %   初始化，已经跑了一段时间，直接读取文件
-% T = 10;    %   起始时刻
-% filenamemid = num2str(T);
-% filename = strcat(filenamesta,filenamemid,filenameend);
-% A = readtable(filename);
-% d_x = table2array(A(:,1:2));
-% d_gx = table2array(A(:,3:4));
-% d_v = table2array(A(:,5));
-% d_T = table2array(A(:,6));
+T = 0;    %   起始时刻
+filenamemid = num2str(T);
+filename = strcat(filenamesta,filenamemid,filenameend);
+A = readtable(filename);
+d_x = table2array(A(:,1:2));
+d_gx = table2array(A(:,3:4));
+d_v = table2array(A(:,5));
+d_T = table2array(A(:,6));
 %   初始化，针对圆bulk内部有多孔介质的体系,向园内射入粒子，方向满足余弦，速度满足2D泄流
 % r = R(1);
 % for i = 1:N
@@ -83,22 +83,25 @@ tic;
 %     d_sd(i) = scene(d_x(i,:),R); 
 % end
 %   用像素计算sdf
-r = R(1);
-parfor i = 1:N
-    %   角度均匀发射
-    theta = 2*pi*rand();
-    theta_v = theta + (asin(2*rand()-1));
-    gx0 = [cos(theta_v) sin(theta_v)];
-    V0 = Boltzmann(Tem);
-    T_ad = (i-1) * (1/2000);   %  轮流发射
-    d_x(i,:) = [-r * cos(theta) -r * sin(theta)];
-%     d_x(i,:) = x0;
-    d_v(i) = V0;
-    d_gx(i,:) = gx0;
-    d_T(i) = T_ad;
-    d_sd(i) = scene(d_x(i,:),R,ppm); %   可以调整一下计算方式
-end
-
+% r = R(1);
+% parfor i = 1:N
+%     %   角度均匀发射
+%     theta = 2*pi*rand();
+%     theta_v = theta + (asin(2*rand()-1));
+%     gx0 = [cos(theta_v) sin(theta_v)];
+%     V0 = Boltzmann(Tem);
+%     T_ad = (i-1) * (1/2000);   %  轮流发射
+%     d_x(i,:) = [-r * cos(theta) -r * sin(theta)];
+% %     d_x(i,:) = x0;
+%     d_v(i) = V0;
+%     d_gx(i,:) = gx0;
+%     d_T(i) = T_ad;
+%     d_sd(i) = scene(d_x(i,:),R,ppm); %   可以调整一下计算方式
+% end
+% filenamemid = num2str(T);
+% filename = strcat(filenamesta,filenamemid,filenameend);
+% varNames = {'rx','ry','gx','gy','v','Tad','sd'};
+% writetable(table(d_x(:,1),d_x(:,2),d_gx(:,1),d_gx(:,2),d_v,d_T,d_sd,'VariableNames',varNames),filename,'WriteMode','overwrite');
 toc;
 tic;
 sumj = 550;
