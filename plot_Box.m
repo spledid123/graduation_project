@@ -16,7 +16,7 @@ ny = a(1).YData(rr);nyy = a(2).YData(rr);
 %%
 load('matlab.mat');
 y = y';yy = yy';ny = ny';nyy = nyy';
-str = 'pm5';
+str = 'pm8';
 str2 = [str '内'];
 str1 = [str '外'];
 g = repmat({str1}, length(y), 1); %   外粒子数

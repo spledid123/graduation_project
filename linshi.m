@@ -114,10 +114,10 @@ imshow(pm{length(pm)}.bina);
 %%
 save('data\pm.mat', 'pm','-mat','-v7.3');
 %%  算孔隙度,Sp
-t = 5;
+t = 8;
 lim = 205;
-S = 100*3^0.5*300;
-load('data\pm.mat');
+S = 6*100^2*3^0.5;
+% load('data\pm.mat');
 phi = sum(pm{t}.bina,'all')/numel(pm{t}.bina);
 Ss = lim^2 * (1 - phi);
 Sp = S - Ss;
