@@ -64,21 +64,21 @@ imshow(cir);
 clc;
 clear;
 t = 1/10;%   开口占边长的比例
-th = 60/180*pi;%    逆时针旋转角
-plot_tri_rec(t, 200, [0 0], th, 205, 'data\pic\tr.bmp');
+th = 0/180*pi;%    逆时针旋转角
+plot_tri_rec(t, 200, [100 0], th, 205, 'data\pic\tr.bmp');
 %%  三角内凸边
 clc;
 clear;
 t = 1/10;%   开口占边长的比例
 th = 0;%    逆时针旋转角
-plot_tri_vex(t, 200*3^0.5, [0 0], th, 205, 'data\pic\tr.bmp');
+plot_tri_vex(t, 200, [0 0], th, 205, 'data\pic\tr.bmp');
 %%  三角内凹边
 clc;
 clear;
-t = 1/10;%   开口占边长的比例
+t = 1/50;%   开口占边长的比例
 th = 0;%    逆时针旋转角
-plot_tri_cave(t, 200*3^0.5, [0 0], th, 205, 'data\pic\tr.bmp');
-%%  三角形阵列
+plot_tri_cave(t, 200, [0 0], th, 205, 'data\pic\tr.bmp');
+%%  三角形正六边形阵列
 clc;
 clear;
 t = 1/10;%   开口占边长的比例
@@ -104,23 +104,72 @@ cir5 = imread('data\pic\5.bmp');
 cir6 = imread('data\pic\6.bmp');
 cir = red_add(cir1, red_add(cir2, red_add(cir3, red_add(cir4, red_add(cir5, cir6)))));
 imshow(cir);
+%%  双重三角形六边形阵列
+clc;
+clear;
+t = 1/10;%   开口占边长的比例
+a = 100;%   边长
+tx = a/2;
+ty = a/3^0.5/2;
+%   六个三角形的信息
+c1 = [a/2 a/2/3^0.5];
+c2 = [0 a/3^0.5];
+c3 = [-a/2 a/2/3^0.5];
+c4 = [-a/2 -a/2/3^0.5];
+c5 = [0 -a/3^0.5];
+c6 = [a/2 -a/2/3^0.5];
+c1x = [tx -tx 0 2*tx 0 -2*tx -3*tx 3*tx -2*tx 2*tx -tx tx];
+c1y = [ty ty -2*ty 4*ty 4*ty 4*ty ty ty -2*ty -2*ty -5*ty -5*ty];
+c2y = -c1y;
+for i = 1:12
+    plot_tri_rec(t, a, [c1x(i) c1y(i)], 0, 205, strcat('data\pic\', int2str(i), '.bmp'));
+    close();
+    plot_tri_rec(t, a, [c1x(i) c2y(i)], pi/3, 205, strcat('data\pic\', int2str(i + 12), '.bmp'));
+    close();
+end
+cir = imread('data\pic\1.bmp');
+for i = 2:24
+    cir = red_add(cir, imread(strcat('data\pic\', int2str(i),'.bmp')));
+end
+imshow(cir);
 %%  得到SDF
 [s, sdf, xlim, ylim] = get_dist(gca,gcf);
-ppm = struct('name', 'pt1', 'exp', '六边形孔喉结构', 'maxx', xlim, 'maxy', ylim, 'bina', s, 'sdf', sdf);
-load('data\pm.mat');
-pm{length(pm) + 1} = ppm;
+close();
+ppm = struct('name', 'tri', 'exp', '三角形凹圆,边长200,t=1/10,中心[100 0]', 'maxx', xlim, 'maxy', ylim, 'bina', s, 'sdf', sdf);
+a = dir('data/porousmedia/*.mat');
+len = length(a);len=13;
+eval(strcat('pm', int2str(len + 1), '{1} = ppm;'));
 figure;
-imshow(pm{length(pm)}.bina);
-%%
-save('data\pm.mat', 'pm','-mat','-v7.3');
+eval(strcat('imshow(pm', int2str(len + 1), '{1}.bina);'));
+%%  存储
+a = dir('data/porousmedia/*.mat');
+len = length(a);len=13;
+filename = strcat('data\porousmedia\pm', int2str(len + 1), '.mat');
+varname = strcat('pm', int2str(len + 1));
+save(filename, varname,'-mat');
+set(gcf,'position',[0 0 800 800]);
+set(gca,'position',[0 0 1 1]);
+saveas(gca,strcat('data\porousmedia\pm', int2str(len + 1), '.png'));
+close();
 %%  算孔隙度,Sp
-t = 8;
+t = 18;
 lim = 205;
-S = 6*100^2*3^0.5;
-% load('data\pm.mat');
-phi = sum(pm{t}.bina,'all')/numel(pm{t}.bina);
+S = 100^2*3^0.5;
+load(strcat('data\porousmedia\pm', int2str(t), '.mat'));
+eval(strcat('ppm = pm', int2str(t), ';'));
+phi = sum(ppm{1}.bina,'all')/numel(ppm{1}.bina);
 Ss = lim^2 * (1 - phi);
 Sp = S - Ss;
+vpa(Sp);
+%%
+t = 14;
+load(strcat('data\porousmedia\pm', int2str(t), '.mat'));
+figure;
+eval(strcat('imshow(pm', num2str(t), '{1}.bina)'));
+set(gca, 'position', [0 0 1 1]);
+set(gcf, 'position', [0 0 800 800]);
+saveas(gca, strcat('data\porousmedia\pm', int2str(t), '.png'));
+close();
 
 
 function cir = red_lap(cir1, cir2)
@@ -180,26 +229,26 @@ set(gca,'position',[0,0,1,1]);
 set(gcf,'position',[0,0,800,800]);
 saveas(gcf,'data\pic\tri.bmp');
 close();
-sd = lim/205;% 矩形偏置以消除边缘
-r4 = [-25*3^0.5 - sd*3^0.5 25 + sd] * [cos(th), sin(th); -sin(th) cos(th)];
+sd = lim/2050;% 矩形偏置以消除边缘
+r4 = [-(a/4/3^0.5 + sd)/2*3^0.5 (a/4/3^0.5 + sd)/2] * [cos(th), sin(th); -sin(th) cos(th)];
 r4 = c + r4;
-figure;plot_rec(r4, [50 + 2*sd 100*t*3^0.5], -pi/6 + th, 1);
+figure;plot_rec(r4, [a/4/3^0.5 + sd a/2*t], -pi/6 + th, 1);
 hold on;axis equal;axis off;xlim([-lim lim]);ylim([-lim lim]);
 set(gca,'position',[0,0,1,1]);
 set(gcf,'position',[0,0,800,800]);
 saveas(gcf,'data\pic\rec1.bmp');
 close();
-r4 = [25*3^0.5 + sd*3^0.5 25 + sd] * [cos(th), sin(th); -sin(th) cos(th)];
+r4 = [(a/4/3^0.5 + sd)/2*3^0.5 (a/4/3^0.5 + sd)/2] * [cos(th), sin(th); -sin(th) cos(th)];
 r4 = c + r4;
-figure;plot_rec(r4, [50 + 2*sd 100*t*3^0.5], pi/6 + th, 1);
+figure;plot_rec(r4, [a/4/3^0.5 + sd a/2*t], pi/6 + th, 1);
 hold on;axis equal;axis off;xlim([-lim lim]);ylim([-lim lim]);
 set(gca,'position',[0,0,1,1]);
 set(gcf,'position',[0,0,800,800]);
 saveas(gcf,'data\pic\rec2.bmp');
 close();
-r4 = [0 -50 - sd*2] * [cos(th), sin(th); -sin(th) cos(th)];
+r4 = [0 -(a/4/3^0.5 + sd)] * [cos(th), sin(th); -sin(th) cos(th)];
 r4 = c + r4;
-figure;plot_rec(r4, [50 + 2*sd 100*t*3^0.5], pi/2 + th, 1);
+figure;plot_rec(r4, [a/4/3^0.5 + sd a/2*t], pi/2 + th, 1);
 hold on;axis equal;axis off;xlim([-lim lim]);ylim([-lim lim]);
 set(gca,'position',[0,0,1,1]);
 set(gcf,'position',[0,0,800,800]);
@@ -302,4 +351,7 @@ set(gca,'position',[0,0,1,1]);
 set(gcf,'position',[0,0,800,800]);
 saveas(gcf, filename);
 end
-
+function s = Shexagon(a)
+%   正六边形的面积，a为边长
+s = 3^1.5/2*a*a;
+end

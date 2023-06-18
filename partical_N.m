@@ -35,14 +35,17 @@ dc_x = cell(N,1);   %   碰撞的位置
 dc_y = cell(N,1);   
 dc_t = zeros(N,1);  %   碰撞的次数
 
-load('data\pm.mat');
+a = 14;
+load(strcat('data\porousmedia\pm', int2str(a), '.mat'));
 ppm = 0;
-if(exist('pm','var'))
-    ppm = pm(9);ppm{1}.bina = [];
+if(exist(strcat('pm', int2str(a)),'var'))
+    eval(strcat('ppm = pm', int2str(a), '(1);'));
+    ppm{1}.bina = [];
 end
-clearvars pm;
+eval(strcat('clearvars pm', int2str(a), ';'));
 
-filenamesta = 'data\bulk_pore_pm9_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
+% filenamesta = 'data\bulk_pore_pm14_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
+filenamesta = strcat('data\bulk_pore_pm', int2str(a), '_R_500_N_1000000_dT_1_2000\rxT_circle_T_');
 filenameend = '_.txt';
 tic;
 %  直接初始化

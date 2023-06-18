@@ -83,7 +83,7 @@ num_5 = zeros(5500,1);
 num_6 = zeros(5500,1);
 flag = 0;    %   1表征这是存在多孔介质，0表示没有
 % 循环遍历每个表格
-ii = 10:10:550;
+ii = 10:10:420;
 N_T = 1;
 j = 1;
 V = [];
@@ -91,7 +91,7 @@ TH = [];
 tic;
 for i = ii
     % 从表格中提取粒子的x和y坐标,可能有两个文件
-    filenamesta = 'data\bulk_pore_pm8_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
+    filenamesta = 'data\bulk_pore_pm18_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
     %     filenamesta1 = 'data\bulk_pore_cir_R_500_1.1_100_N_1000000_dT_1_2000(2)\rxT_circle_T_';
     filenamemid = num2str(N_T*i);
     filenameend = '_.txt';
@@ -115,21 +115,21 @@ for i = ii
     %   t_pore = (x < 150) & (x > -150) & (y > - 150) & (y < 150);
 %       t_pore = (x < 110) & (x > -110) & (y > - 110) & (y < 110);
 %       t_pore = (x < 205) & (x > -205) & (y > - 205) & (y < 205);
-    %   三角
-%         t_pore = [];
-%         for k = 1:length(v)
-%             t_pore(k) = triangleSDF([x(k) y(k)], [-100*3^0.5,-100], [100*3^0.5,-100], [0, 200]) < 0;
-%         end
-t_pore = zeros(1e6, 1);
+%       三角
+        t_pore = [];
         for k = 1:length(v)
-            t_pore(k) = HexagonSDF([x(k) y(k)], [0 0], 200) < 0;
+            t_pore(k) = triangleSDF([x(k) y(k)], [-100,-100/3^0.5], [100,-100/3^0.5], [0, 200/3^0.5]) < 0;
         end
-        t_1 = atan2(y,x) < pi/3 & atan2(y,x) > 0 & t_pore;
-        t_2 = atan2(y,x) > pi/3 & atan2(y,x) < 2*pi/3 & t_pore;
-        t_3 = atan2(y,x) > 2*pi/3 & atan2(y,x) < pi & t_pore;
-        t_4 = atan2(y,x) > -pi & atan2(y,x) < -2*pi/3 & t_pore;
-        t_5 = atan2(y,x) > -2*pi/3 & atan2(y,x) < -pi/3 & t_pore;
-        t_6 = atan2(y,x) > -pi/3 & atan2(y,x) < 0 & t_pore;
+% t_pore = zeros(1e6, 1);
+% for k = 1:length(v)
+%     t_pore(k) = HexagonSDF([x(k) y(k)], [0 0], 200) < 0;
+% end
+%         t_1 = atan2(y,x) < pi/3 & atan2(y,x) > 0 & t_pore;
+%         t_2 = atan2(y,x) > pi/3 & atan2(y,x) < 2*pi/3 & t_pore;
+%         t_3 = atan2(y,x) > 2*pi/3 & atan2(y,x) < pi & t_pore;
+%         t_4 = atan2(y,x) > -pi & atan2(y,x) < -2*pi/3 & t_pore;
+%         t_5 = atan2(y,x) > -2*pi/3 & atan2(y,x) < -pi/3 & t_pore;
+%         t_6 = atan2(y,x) > -pi/3 & atan2(y,x) < 0 & t_pore;
     %   两圆
     %     t_pore = ((x + 150).^2 + (y).^2) < 205^2 | ((x - 150).^2 + (y).^2) < 205^2;   %   l
     %   三凹圆弧
@@ -161,12 +161,12 @@ t_pore = zeros(1e6, 1);
     num_pore(i) = sum(t_pore);
     t_cir = (x.^2 + y.^2).^0.5 < r-1e-3;
     num_cir(i) = sum(t_cir);
-    num_1(i) = sum(t_1);
-    num_2(i) = sum(t_2);
-    num_3(i) = sum(t_3);
-    num_4(i) = sum(t_3);
-    num_5(i) = sum(t_3);
-    num_6(i) = sum(t_3);
+%     num_1(i) = sum(t_1);
+%     num_2(i) = sum(t_2);
+%     num_3(i) = sum(t_3);
+%     num_4(i) = sum(t_3);
+%     num_5(i) = sum(t_3);
+%     num_6(i) = sum(t_3);
 %     if(mod(i,10) == 0)  
         fprintf("%d\n",i);
         for k = 1:length(v)%    检验多孔介质内速度分布
@@ -235,7 +235,25 @@ toc;
 % pm7
 % Sp = 84870;
 % pm8
-Sp = 94047;
+% Sp = 94047;
+%   pm10
+% Sp = 13813;
+%   pm11
+% Sp = 14145;
+%   pm12
+% Sp = 15675;
+%   pm13
+% Sp = 14361;
+%   pm14
+% Sp = 13813;
+%   pm15
+% Sp = 16238;
+% pm16
+% Sp = 82878.5;
+%   pm17
+Sp = 15674.7;
+%   pm18
+Sp = 16612;
 
 
 
@@ -254,7 +272,8 @@ f_p = num_pore / Sp; %  多孔介质数密度
 % Sc = pi * (r - 1e-3) ^ 2 - (2 * 205)^2;
 % Sc = pi* (r-1e-3)^2 - pi*200^2;
 % Sc = pi* (r-1e-3)^2 - 100*3^0.5*300;
-Sc = pi * (r-1e-3)^2 - 6*100^2*3^0.5;
+Sc = pi * (r-1e-3)^2 - 100^2*3^0.5;
+% Sc = pi * (r-1e-3)^2 - 3^1.5/2*200^2;
 
 f_c = (num_cir - num_pore) / Sc; %  多孔介质外数密度
 %  画图
@@ -274,18 +293,18 @@ xlabel('时间','FontSize',14);
 ylabel('粒子数','FontSize',14);
 plot((ii).*N_T,num_pore(ii),'displayname','多孔介质内粒子数');
 plot((ii).*N_T,num_cir(ii) - num_pore(ii),'displayname','多孔介质外数密度');
-figure;
-hold on;
-title('粒子数','FontSize',14);
-xlabel('时间','FontSize',14);
-ylabel('粒子数','FontSize',14);
-box on;
-plot(ii.*N_T, num_1(ii), 'DisplayName','1');
-plot(ii.*N_T, num_2(ii), 'DisplayName','2');
-plot(ii.*N_T, num_3(ii), 'DisplayName','3');
-plot(ii.*N_T, num_4(ii), 'DisplayName','4');
-plot(ii.*N_T, num_5(ii), 'DisplayName','5');
-plot(ii.*N_T, num_6(ii), 'DisplayName','6');
+% figure;
+% hold on;
+% title('粒子数','FontSize',14);
+% xlabel('时间','FontSize',14);
+% ylabel('粒子数','FontSize',14);
+% box on;
+% plot(ii.*N_T, num_1(ii), 'DisplayName','1');
+% plot(ii.*N_T, num_2(ii), 'DisplayName','2');
+% plot(ii.*N_T, num_3(ii), 'DisplayName','3');
+% plot(ii.*N_T, num_4(ii), 'DisplayName','4');
+% plot(ii.*N_T, num_5(ii), 'DisplayName','5');
+% plot(ii.*N_T, num_6(ii), 'DisplayName','6');
 %%  根据粒子的图表，形成速度分布
 filename = 'data\bulk_pore_cir_R_500_N_20000_dT_1_200\rxT_circle_T_100_.txt';
 A = readtable(filename);

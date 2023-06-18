@@ -1,5 +1,5 @@
 %   根据粒子位置，画粒子
-filename = 'data\bulk_pore_pm1_R_500_N_1000000_dT_1_2000\rxT_circle_T_200_.txt';
+filename = 'data\bulk_pore_pm10_R_500_N_1000000_dT_1_2000\rxT_circle_T_200_.txt';
 %   不同粒子的位置
 A = readtable(filename);
 len = size(A);
