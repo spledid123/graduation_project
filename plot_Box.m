@@ -19,6 +19,8 @@ y = y';yy = yy';ny = ny';nyy = nyy';
 str = 'pm18';
 str2 = [str '内'];
 str1 = [str '外'];
+NYname{length(NYname) + 1} = struct('name', str1, 'sta', length(GNY) + 1, 'end', length(GNY) + length(ny));
+NYYname{length(NYYname) + 1} = struct('name', str2, 'sta', length(GNYY) + 1, 'end', length(GNYY) + length(nyy));
 g = repmat({str1}, length(y), 1); %   外粒子数
 GY = [GY;g];
 % GY = g;
@@ -45,7 +47,7 @@ figure;
 ax2 = gca;
 boxplot(ax2, YY, GYY);
 title('内粒子数');
-%%
+%%  画内外数密度箱型图
 figure;
 subplot(1,2,1);
 ax3 = gca;
@@ -58,4 +60,17 @@ boxplot(ax4, NYY, GNYY);
 title('内数密度');
 ylim([0 0.018]);
 %%
-save('matlab.mat','GNYY','NYY',"GNY","NY","GYY","GY","YY","Y");
+save('matlab.mat','GNYY','NYY',"GNY","NY","GYY","GY","YY","Y","NYname","NYYname");
+%%  画指定的数密度箱型图
+load('matlab.mat');
+i = [13 14];
+nyyi = [];
+for j = 1:length(i)
+    nyyi = [nyyi NYYname{i(j)}.sta:NYYname{i(j)}.end];
+end
+figure;
+ylim([0 0.018]);
+ax5 = gca;
+boxplot(ax5, NYY(nyyi), GNYY(nyyi));
+title('内数密度');
+ylim([0 0.018]);
