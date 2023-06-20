@@ -152,9 +152,9 @@ set(gca,'position',[0 0 1 1]);
 saveas(gca,strcat('data\porousmedia\pm', int2str(len + 1), '.png'));
 close();
 %%  算孔隙度,Sp
-t = 18;
+t = 3;
 lim = 205;
-S = 100^2*3^0.5;
+S = 100*300*3^0.5;
 load(strcat('data\porousmedia\pm', int2str(t), '.mat'));
 eval(strcat('ppm = pm', int2str(t), ';'));
 phi = sum(ppm{1}.bina,'all')/numel(ppm{1}.bina);

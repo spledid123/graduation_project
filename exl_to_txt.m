@@ -16,7 +16,7 @@ parfor i = 1:len
     delete(filename);%  删除文件
 end
 %%  删除文件夹里不需要的文件
-a = dir('data/bulk_pore_pm13_R_500_N_1000000_dT_1_2000/*.txt');% 读取文件夹里所有txt文件(包括子文件夹)
+a = dir('data/bulk_pore_pm16_R_500_N_1000000_dT_1_2000/*.txt');% 读取文件夹里所有txt文件(包括子文件夹)
 len = length(a);
 for i = 1:len
     t = a(i).name;

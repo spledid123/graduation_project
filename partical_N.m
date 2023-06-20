@@ -1,8 +1,15 @@
+for i = [5:8 10:18]
+    main(i);
+end
+
+
+
+function [] = main(a)
 %   主函数，描述N个粒子的运动，赋予速度，固定时间间隔记录粒子位置，速度
 %   并行计算
 %   考虑周期性边界
-clc;
-clear;
+% clc;
+% clear;
 
 EPSILON = 1e-6;
 EPSILON_SD = 1e-7;
@@ -12,7 +19,7 @@ R = [500];     %   几何参数
 %  R = [r,Rp,nump],r为bulk圆半径,圆心在原点,Rp为阵列的孔喉比,nump为圆阵列每行个数，圆的半径为1
 
 N = 1000000;            %   粒子个数
-N_T = 1e0;         %   时间间隔
+N_T = 1e1;         %   时间间隔
 
 Tem = 40;           %   绝对温度
 theta = 0;          %   速度方向角度
@@ -35,7 +42,6 @@ dc_x = cell(N,1);   %   碰撞的位置
 dc_y = cell(N,1);   
 dc_t = zeros(N,1);  %   碰撞的次数
 
-a = 14;
 load(strcat('data\porousmedia\pm', int2str(a), '.mat'));
 ppm = 0;
 if(exist(strcat('pm', int2str(a)),'var'))
@@ -61,14 +67,14 @@ tic;
 %     d_T(i) = T_ad;
 % end
 %   初始化，已经跑了一段时间，直接读取文件
-T = 0;    %   起始时刻
-filenamemid = num2str(T);
-filename = strcat(filenamesta,filenamemid,filenameend);
-A = readtable(filename);
-d_x = table2array(A(:,1:2));
-d_gx = table2array(A(:,3:4));
-d_v = table2array(A(:,5));
-d_T = table2array(A(:,6));
+% T = 0;    %   起始时刻
+% filenamemid = num2str(T);
+% filename = strcat(filenamesta,filenamemid,filenameend);
+% A = readtable(filename);
+% d_x = table2array(A(:,1:2));
+% d_gx = table2array(A(:,3:4));
+% d_v = table2array(A(:,5));
+% d_T = table2array(A(:,6));
 %   初始化，针对圆bulk内部有多孔介质的体系,向园内射入粒子，方向满足余弦，速度满足2D泄流
 % r = R(1);
 % for i = 1:N
@@ -86,28 +92,28 @@ d_T = table2array(A(:,6));
 %     d_sd(i) = scene(d_x(i,:),R); 
 % end
 %   用像素计算sdf
-% r = R(1);
-% parfor i = 1:N
-%     %   角度均匀发射
-%     theta = 2*pi*rand();
-%     theta_v = theta + (asin(2*rand()-1));
-%     gx0 = [cos(theta_v) sin(theta_v)];
-%     V0 = Boltzmann(Tem);
-%     T_ad = (i-1) * (1/2000);   %  轮流发射
-%     d_x(i,:) = [-r * cos(theta) -r * sin(theta)];
-% %     d_x(i,:) = x0;
-%     d_v(i) = V0;
-%     d_gx(i,:) = gx0;
-%     d_T(i) = T_ad;
-%     d_sd(i) = scene(d_x(i,:),R,ppm); %   可以调整一下计算方式
-% end
-% filenamemid = num2str(T);
-% filename = strcat(filenamesta,filenamemid,filenameend);
-% varNames = {'rx','ry','gx','gy','v','Tad','sd'};
-% writetable(table(d_x(:,1),d_x(:,2),d_gx(:,1),d_gx(:,2),d_v,d_T,d_sd,'VariableNames',varNames),filename,'WriteMode','overwrite');
+r = R(1);
+parfor i = 1:N
+    %   角度均匀发射
+    theta = 2*pi*rand();
+    theta_v = theta + (asin(2*rand()-1));
+    gx0 = [cos(theta_v) sin(theta_v)];
+    V0 = Boltzmann(Tem);
+    T_ad = (i-1) * (1/2000);   %  轮流发射
+    d_x(i,:) = [-r * cos(theta) -r * sin(theta)];
+%     d_x(i,:) = x0;
+    d_v(i) = V0;
+    d_gx(i,:) = gx0;
+    d_T(i) = T_ad;
+    d_sd(i) = scene(d_x(i,:),R,ppm); %   可以调整一下计算方式
+end
+filenamemid = num2str(T);
+filename = strcat(filenamesta,filenamemid,filenameend);
+varNames = {'rx','ry','gx','gy','v','Tad','sd'};
+writetable(table(d_x(:,1),d_x(:,2),d_gx(:,1),d_gx(:,2),d_v,d_T,d_sd,'VariableNames',varNames),filename,'WriteMode','overwrite');
 toc;
 tic;
-sumj = 550;
+sumj = 50;
 for j = 1:sumj %    时间循环
     parfor i = 1:N
         x = d_x(i,:);
@@ -172,3 +178,6 @@ for j = 1:sumj %    时间循环
     writetable(table(d_x(:,1),d_x(:,2),d_gx(:,1),d_gx(:,2),d_v,d_T,d_sd,'VariableNames',varNames),filename,'WriteMode','overwrite');
 end
 toc;
+mailme([],'down',['花费了' num2str(toc/3600) '小时']);
+
+end

@@ -9,15 +9,16 @@ if(y < Ylim(1) || y > Ylim(2))
     error('y给错了');
 end
 sdx = (Xlim(2) - Xlim(1))/sumx;
-i = floor((x-Xlim(1))/sdx) + 1;
+j = floor((x-Xlim(1))/sdx) + 1;
 sdy = (Ylim(2) - Ylim(1))/sumy;
-j = floor((y-Ylim(1))/sdy) + 1;
-if(i > sumx)
+i = floor((y-Ylim(1))/sdy) + 1;
+if(i > sumy)
     i = i - 1;
 end
-if(j > sumy)
+if(j > sumx)
     j = j - 1;
 end
+i = sumy + 1 - i;
 tx = (Xlim(2) - Xlim(1))/sumx;
 ty = (Ylim(2) - Ylim(1))/sumy;
 if(abs(tx - ty) > 1e-4)

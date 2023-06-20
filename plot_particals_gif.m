@@ -68,7 +68,7 @@ N_T = 1;%   delta T
 % 循环遍历每个表格
 for i = 1:1:30
     % 从表格中提取粒子的x和y坐标
-    filenamesta = 'data\bulk_R_500_N_200000_dT_2000\rxT_circle_T_';
+    filenamesta = 'data\bulk_pore_pm14_R_500_N_1000000_dT_1_2000\rxT_circle_T_';
     filenamemid = num2str(N_T * i);
     filenameend = '_.txt';
     filename = strcat(filenamesta,filenamemid,filenameend);
